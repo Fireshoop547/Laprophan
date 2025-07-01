@@ -1,7 +1,22 @@
 {
+  "name": "marketplaceocta-8",
+  "version": "1.0.0",
+  "description": "AI Agents Marketplace",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "start": "vercel dev"
+  },
   "dependencies": {
     "axios": "^1.10.0",
     "cors": "^2.8.5",
     "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

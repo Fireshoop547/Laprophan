@@ -124,7 +124,7 @@
             var $result = $('#wa-cred-result');
             $result.removeClass('success error').html('Verifying...');
             $.ajax({
-                url: 'http://localhost:3000/verify-whatsapp',
+                url: '/api/verify-whatsapp',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ clientId, clientSecret }),
