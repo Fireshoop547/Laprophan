@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Configure</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #1976d2 0%, #00c6fb 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .bg-svg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.13;
+        }
+        .simple-form, .ai-config-form {
+            position: relative;
+            z-index: 1;
+        }
+        .simple-form {
+            max-width: 350px;
+            margin: 120px auto;
+            padding: 24px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px #e3e8ee44;
+        }
+        .simple-form label {
+            display: block;
+            margin-bottom: 10px;
+            color: #222;
+            font-weight: bold;
+        }
+        .simple-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 18px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .verify-btn, .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .verify-btn:hover, .submit-btn:hover {
+            background: #1251a3;
+        }
+        .result {
+            margin-top: 16px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .result.success { color: #1abc9c; }
+        .result.error { color: #e74c3c; }
+        .ai-config-form { display: none; flex-direction: column; }
+        .ai-config-form label { margin-bottom: 10px; color: #222; font-weight: bold; }
+        .ai-config-form input { width: 100%; padding: 10px; margin-bottom: 18px; border: 1px solid #999; border-radius: 5px; font-size: 1em; box-sizing: border-box; }
+        .sent-message { color: #1abc9c; font-weight: bold; margin-top: 18px; text-align: center; }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <svg class="bg-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <radialGradient id="g2" cx="50%" cy="50%" r="80%">
+                <stop offset="0%" stop-color="#fff" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="#1976d2" stop-opacity="0"/>
+            </radialGradient>
+        </defs>
+        <circle cx="300" cy="300" r="180" fill="url(#g2)" />
+        <ellipse cx="1200" cy="700" rx="220" ry="90" fill="#00c6fb" opacity="0.13" />
+        <path d="M200 800 Q600 600 1000 800 T1400 800" stroke="#fff" stroke-width="8" fill="none" opacity="0.09" />
+        <circle cx="900" cy="200" r="90" fill="#1976d2" opacity="0.09" />
+    </svg>
+    <form class="simple-form" id="wa-form" onsubmit="return false;">
+        <label for="wa-client-id">WhatsApp Client ID</label>
+        <input type="text" id="wa-client-id" placeholder="Enter your client ID">
+        <label for="wa-client-secret">WhatsApp Client Secret</label>
+        <input type="password" id="wa-client-secret" placeholder="Enter your client secret">
+        <button type="button" class="verify-btn" id="verify-btn">Verify</button>
+        <div id="wa-cred-result" class="result"></div>
+    </form>
+    <form class="simple-form ai-config-form" id="ai-config-form" onsubmit="return false;">
+        <label for="persona">Persona / Role<br><span style="font-weight:normal; color:#444;">Who are you in this scenario? (e.g. teacher, marketing manager, software user)</span></label>
+        <input type="text" id="persona" name="role" placeholder="e.g. teacher, marketing manager, software user">
+        <label for="topic">Topic / Context<br><span style="font-weight:normal; color:#444;">What's the subject or project you're working on? (e.g. product launch, blog post)</span></label>
+        <input type="text" id="topic" name="topic" placeholder="e.g. product launch, blog post">
+        <label for="objective">Objective / Goal<br><span style="font-weight:normal; color:#444;">What do you want the AI to produce? (e.g. outline, code snippet, persuasive email)</span></label>
+        <input type="text" id="objective" name="objective" placeholder="e.g. outline, code snippet, persuasive email">
+        <label for="details">Key Details / Data<br><span style="font-weight:normal; color:#444;">Any facts or inputs the AI needs to know? (e.g. target audience, technical specs)</span></label>
+        <input type="text" id="details" name="details" placeholder="e.g. target audience, technical specs">
+        <label for="tone">Tone / Constraints<br><span style="font-weight:normal; color:#444;">What style or rules should it follow? (e.g. friendly, 200-word limit, formal)</span></label>
+        <input type="text" id="tone" name="tone" placeholder="e.g. friendly, 200-word limit, formal">
+        <button type="button" class="submit-btn" id="submit-btn">Submit</button>
+        <div id="sent-message" class="sent-message" style="display:none;">Sent!</div>
+    </form>
+    <script>
+    $(document).ready(function() {
+        $('#verify-btn').on('click', function() {
+            var clientId = $('#wa-client-id').val().trim();
+            var clientSecret = $('#wa-client-secret').val().trim();
+            var $result = $('#wa-cred-result');
+            $result.removeClass('success error').html('Verifying...');
+            $.ajax({
+                url: 'http://localhost:3000/verify-whatsapp',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ clientId, clientSecret }),
+                success: function(data) {
+                    if (data.valid) {
+                        $result.addClass('success').html('✔️ Credentials are valid!');
+                        setTimeout(function() {
+                            $('#wa-form').hide();
+                            $('#ai-config-form').show();
+                        }, 800);
+                    } else {
+                        $result.addClass('error').html('❌ Invalid credentials. Please try again.');
+                    }
+                },
+                error: function() {
+                    $result.addClass('error').html('❌ Error connecting to server.');
+                }
+            });
+        });
+
+        $('#submit-btn').on('click', function() {
+            var data = {
+                role: $('#persona').val(),
+                topic: $('#topic').val(),
+                objective: $('#objective').val(),
+                details: $('#details').val(),
+                tone: $('#tone').val()
+            };
+            $('#submit-btn').prop('disabled', true).text('Sending...');
+            $('#sent-message').hide();
+            $.ajax({
+                url: 'https://n8n.srv809999.hstgr.cloud/webhook-test/0ccfcbdb-892f-4e75-a88a-2df3431cd1d1',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function() {
+                    $('#sent-message').show();
+                    $('#submit-btn').prop('disabled', false).text('Submit');
+                },
+                error: function() {
+                    $('#sent-message').text('Error sending!').css('color', '#e74c3c').show();
+                    $('#submit-btn').prop('disabled', false).text('Submit');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
