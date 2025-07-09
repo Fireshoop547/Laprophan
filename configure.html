@@ -118,13 +118,45 @@
     </form>
     <script>
     $(document).ready(function() {
-        $('#verify-btn').on('click', function(e) {
+        $('#verify-btn').on('click', async function(e) {
             e.preventDefault();
-            $('.result').removeClass('error').addClass('success').html('✔️ Verified!');
-            setTimeout(function() {
-                $('#wa-form').hide();
-                $('#ai-config-form').show();
-            }, 800);
+            var clientId = $('#wa-client-id').val().trim();
+            var clientSecret = $('#wa-client-secret').val().trim();
+            var resultDiv = $('#wa-cred-result');
+            resultDiv.removeClass('error success').text('');
+            if (!clientId || !clientSecret) {
+                resultDiv.addClass('error').removeClass('success').html('Please enter both Client ID and Secret.');
+                return;
+            }
+            resultDiv.html('Verifying...');
+            try {
+                const response = await $.ajax({
+                    url: '/api/verify-whatsapp',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        clientId: clientId,
+                        clientSecret: clientSecret,
+                        code: 'dummy', // TODO: Replace with actual code if needed
+                        redirectUri: 'dummy' // TODO: Replace with actual redirectUri if needed
+                    })
+                });
+                if (response.valid) {
+                    resultDiv.removeClass('error').addClass('success').html('✔️ Verified!');
+                    setTimeout(function() {
+                        $('#wa-form').hide();
+                        $('#ai-config-form').show();
+                    }, 800);
+                } else {
+                    resultDiv.removeClass('success').addClass('error').html('❌ Invalid credentials. ' + (response.error?.message || ''));
+                }
+            } catch (err) {
+                let msg = '❌ Verification failed.';
+                if (err.responseJSON && err.responseJSON.error) {
+                    msg += ' ' + (err.responseJSON.error.message || JSON.stringify(err.responseJSON.error));
+                }
+                resultDiv.removeClass('success').addClass('error').html(msg);
+            }
         });
 
         $('#submit-btn').on('click', function() {
