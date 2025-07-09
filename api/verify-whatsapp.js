@@ -14,38 +14,34 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { clientId, clientSecret, code, redirectUri } = req.body;
+  const { clientId, clientSecret } = req.body;
 
-  if (!clientId || !clientSecret || !code || !redirectUri) {
-    return res.status(400).json({ error: 'Missing clientId, clientSecret, code, or redirectUri' });
+  if (!clientId || !clientSecret) {
+    return res.status(400).json({ error: 'Missing clientId or clientSecret' });
   }
 
   try {
-    const { data } = await axios.post(
-      'https://graph.facebook.com/v19.0/oauth/access_token',
-      null,
+    const { data } = await axios.get(
+      'https://graph.facebook.com/oauth/access_token',
       {
         params: {
           client_id: clientId,
           client_secret: clientSecret,
-          code,
-          redirect_uri: redirectUri,
-        },
+          grant_type: 'client_credentials'
+        }
       }
     );
 
-    // Check for error in the response data
-    if (data.error) {
-      return res.status(401).json({ valid: false, error: data.error });
+    // If we get an access_token, credentials are valid
+    if (data.access_token) {
+      return res.status(200).json({ valid: true, data });
+    } else {
+      return res.status(401).json({ valid: false, error: data });
     }
-
-    // Success: you get access_token, token_type, expires_in
-    return res.status(200).json({ valid: true, data });
   } catch (err) {
     // Log full error for debugging
-    console.error('Token exchange failed:', err.response?.data || err.message);
+    console.error('Client credentials check failed:', err.response?.data || err.message);
 
-    // 401 might be more semantically accurate than 200
     return res
       .status(401)
       .json({ valid: false, error: err.response?.data || err.message });
