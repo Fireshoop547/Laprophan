@@ -264,4 +264,66 @@ $(document).ready(function() {
             }, 150);
         });
     });
+
+    // --- Highlight active nav link on scroll ---
+    const navLinks = document.querySelectorAll('.main-nav a[href^="#"]');
+    const sections = Array.from(navLinks).map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+
+    function onScrollActiveSection() {
+        let scrollPos = window.scrollY || window.pageYOffset;
+        let offset = 120; // adjust for sticky header
+        let currentSection = sections[0];
+        for (let section of sections) {
+            if (section.offsetTop - offset <= scrollPos) {
+                currentSection = section;
+            }
+        }
+        navLinks.forEach(link => link.classList.remove('active'));
+        let activeLink = Array.from(navLinks).find(link => link.getAttribute('href') === `#${currentSection.id}`);
+        if (activeLink) activeLink.classList.add('active');
+    }
+    window.addEventListener('scroll', onScrollActiveSection);
+    window.addEventListener('DOMContentLoaded', onScrollActiveSection);
+
+    // --- Email-capture modal logic ---
+    const leadModal = document.getElementById('lead-modal');
+    const openLeadModalBtn = document.getElementById('open-lead-modal');
+    const closeLeadModalBtn = document.getElementById('close-lead-modal');
+    const leadForm = document.getElementById('lead-form');
+    const leadSuccess = document.getElementById('lead-success');
+    let leadModalTimeout;
+
+    function openLeadModal() {
+        leadModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        document.getElementById('lead-email').focus();
+    }
+    function closeLeadModal() {
+        leadModal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    if (openLeadModalBtn) {
+        openLeadModalBtn.addEventListener('click', openLeadModal);
+    }
+    if (closeLeadModalBtn) {
+        closeLeadModalBtn.addEventListener('click', closeLeadModal);
+    }
+    window.addEventListener('keydown', function(e) {
+        if (leadModal.style.display === 'flex' && (e.key === 'Escape' || e.key === 'Esc')) {
+            closeLeadModal();
+        }
+    });
+    // Show modal after 10s if not already opened
+    leadModalTimeout = setTimeout(() => {
+        if (leadModal.style.display !== 'flex') openLeadModal();
+    }, 10000);
+    // Handle form submit
+    if (leadForm) {
+        leadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            leadForm.style.display = 'none';
+            leadSuccess.style.display = 'block';
+            setTimeout(closeLeadModal, 3500);
+        });
+    }
 }); 

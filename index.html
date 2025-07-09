@@ -4,14 +4,27 @@
     <meta charset="UTF-8">
     <title>MarketplaceOcta 8</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MarketplaceOcta 8: Instantly launch, configure, and deploy AI agents for your business. Cut support costs, automate tasks, and boost conversions with next-gen AI." />
+    <meta property="og:title" content="MarketplaceOcta 8 – AI Agents for Every Need" />
+    <meta property="og:description" content="Cut your support costs by 30% and resolve 80% of customer inquiries automatically. Instantly launch, configure, and deploy AI agents for your business." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yourdomain.com/" />
     <link rel="stylesheet" href="assets/style.css">
     <script src="js/main.js" defer></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
 </head>
 <body>
     <!-- Floating Header -->
-    <header class="site-header glass-card fade-in">
+    <header class="site-header glass-card fade-in" role="banner">
         <div class="logo-minimal">MO8</div>
-        <nav class="main-nav">
+        <nav class="main-nav" aria-label="Main navigation">
             <a href="#about">About</a>
             <a href="#testimonials">Testimonials</a>
             <a href="#contact">Contact</a>
@@ -19,7 +32,7 @@
         </nav>
     </header>
     <!-- Digital Cube Intro -->
-    <div id="cube-intro" class="fade-in">
+    <div id="cube-intro" class="fade-in" aria-hidden="true">
         <div class="cube-3d">
             <div class="cube-face front">M</div>
             <div class="cube-face back">O</div>
@@ -30,88 +43,142 @@
         </div>
         <div class="cube-intro-title">MarketplaceOcta 8</div>
     </div>
-    <canvas id="bg-animated"></canvas>
+    <canvas id="bg-animated" aria-hidden="true"></canvas>
     <!-- Enhanced Hero Section -->
-    <section class="hero-section glass-card fade-in">
+    <section class="hero-section glass-card fade-in" aria-labelledby="hero-title">
         <div class="hero-content">
-            <h2>AI Agents for Every Need</h2>
-            <p>Supercharge your business with next-gen AI. Explore, configure, and launch in minutes.</p>
-            <button class="cta-btn" onclick="window.location.href='configure.html'">Get Started</button>
+            <h1 class="hero-title" id="hero-title" data-text="AI Agents for Every Need">AI Agents for Every Need</h1>
+            <h2 class="hero-subtitle">Cut your support costs by 30% with ChatBot Pro</h2>
+            <div class="hero-stats">Resolve 80% of customer inquiries automatically. <span class="hero-stat-highlight">2× lift in lead conversion in one week.</span></div>
+            <div class="hero-cta-group">
+                <button class="cta-btn" onclick="window.location.href='configure.html'">Launch Your First Agent in 5 Minutes</button>
+                <button class="cta-btn secondary" onclick="window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ','_blank')">Watch Demo</button>
+                <button class="cta-btn secondary" id="open-lead-modal" type="button">Get Cheat Sheet</button>
+            </div>
         </div>
         <div class="hero-visual">
-            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="AI Visual" />
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Illustration of AI agent network" />
+            <svg class="hero-bg-svg" width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;top:0;left:0;z-index:-1;opacity:0.18;pointer-events:none;"><circle cx="160" cy="160" r="140" stroke="#00c6fb" stroke-width="8" fill="none"/><circle cx="160" cy="160" r="100" stroke="#1976d2" stroke-width="4" fill="none"/><circle cx="160" cy="160" r="60" stroke="#fff" stroke-width="2" fill="none"/></svg>
         </div>
     </section>
-    <main class="product-list fade-in">
-        <div class="product-box">
-            <img src="https://picsum.photos/320/200?random=1" alt="AI Agent 1" class="product-img">
-            <div class="product-title">ChatBot Pro</div>
-            <div class="product-desc">An advanced conversational AI for customer support and sales.</div>
-            <button class="configure-btn" onclick="window.location.href='configure.html'">Configure</button>
+    <!-- Email Capture Modal (Onboarding Cheat Sheet) -->
+    <div id="lead-modal" class="lead-modal" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title" tabindex="-1" style="display:none;">
+        <div class="lead-modal-content">
+            <button class="lead-modal-close" id="close-lead-modal" aria-label="Close modal">&times;</button>
+            <h2 id="lead-modal-title">Get Your WhatsApp Bot Onboarding Cheat Sheet</h2>
+            <ol style="text-align:left;margin:1em auto 1.5em auto;max-width:340px;">
+                <li>Click <b>Get Started</b> to begin configuring your WhatsApp Business bot.</li>
+                <li>Follow the instructions to obtain your <b>WhatsApp Business API Secret ID</b>.</li>
+                <li>Paste your Secret ID below.</li>
+                <li>Enter a custom prompt for your bot (describe what it should do, e.g., "Answer customer support questions about my store").</li>
+                <li>Click <b>Send</b> to receive your personalized onboarding PDF and next steps.</li>
+            </ol>
+            <form id="lead-form" autocomplete="off">
+                <label for="lead-email" class="sr-only">Email address</label>
+                <input type="email" id="lead-email" name="email" placeholder="Your Email" required aria-label="Your Email" />
+                <label for="lead-secret" class="sr-only">WhatsApp Secret ID</label>
+                <input type="text" id="lead-secret" name="secret" placeholder="WhatsApp Secret ID" required aria-label="WhatsApp Secret ID" />
+                <label for="lead-prompt" class="sr-only">Bot Prompt</label>
+                <textarea id="lead-prompt" name="prompt" placeholder="Describe your bot's purpose (e.g., Answer customer support questions)" required aria-label="Bot Prompt"></textarea>
+                <button type="submit" class="cta-btn">Send Me the Cheat Sheet</button>
+            </form>
+            <div id="lead-success" class="lead-success" style="display:none;">Thank you! Check your inbox for your personalized onboarding PDF.</div>
         </div>
-        <div class="product-box">
-            <img src="https://picsum.photos/320/200?random=2" alt="AI Agent 2" class="product-img">
-            <div class="product-title">VisionAI</div>
-            <div class="product-desc">Image recognition and analysis for business automation.</div>
-            <button class="configure-btn" onclick="window.location.href='configure.html'">Configure</button>
-        </div>
-        <div class="product-box">
-            <img src="https://picsum.photos/320/200?random=3" alt="AI Agent 3" class="product-img">
-            <div class="product-title">DataSage</div>
-            <div class="product-desc">Data analytics and insights powered by AI.</div>
-            <button class="configure-btn" onclick="window.location.href='configure.html'">Configure</button>
-        </div>
+    </div>
+    <main id="main-content">
+        <section class="product-list fade-in" aria-labelledby="products-title">
+            <h2 id="products-title" class="sr-only">AI Agent Products</h2>
+            <div class="product-box">
+                <picture>
+                    <source srcset="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80" type="image/jpeg">
+                    <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80" alt="ChatBot Pro AI assistant" class="product-img" loading="lazy" />
+                </picture>
+                <div class="product-title">ChatBot Pro</div>
+                <div class="product-desc">Resolve 80% of customer inquiries automatically and cut support costs by 30%. <br><span class="hero-stat-highlight">Trusted by 500+ businesses.</span></div>
+                <button class="configure-btn" onclick="window.location.href='configure.html'">Configure</button>
+            </div>
+            <div class="product-box">
+                <picture>
+                    <source srcset="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" type="image/jpeg">
+                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="VisionAI computer vision" class="product-img" loading="lazy" />
+                </picture>
+                <div class="product-title">VisionAI</div>
+                <div class="product-desc">Automate product image analysis and boost catalog accuracy by 95%. <br><span class="hero-stat-highlight">Process 10,000+ images per hour.</span></div>
+                <button class="configure-btn" onclick="window.location.href='configure.html'">Configure</button>
+            </div>
+            <div class="product-box">
+                <picture>
+                    <source srcset="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80" type="image/jpeg">
+                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80" alt="DataSage AI analytics" class="product-img" loading="lazy" />
+                </picture>
+                <div class="product-title">DataSage</div>
+                <div class="product-desc">Unlock actionable insights and double your decision speed. <br><span class="hero-stat-highlight">2× faster reporting for your team.</span></div>
+                <button class="configure-btn" onclick="window.location.href='configure.html'">Configure</button>
+            </div>
+        </section>
+        <section class="about-section fade-in" id="about" aria-labelledby="about-title">
+            <h2 id="about-title">How It Works</h2>
+            <div class="about-steps">
+                <div class="about-step">
+                    <span class="about-icon" aria-label="Explore" role="img">🔍</span>
+                    <h3>Explore</h3>
+                    <p>Browse a curated selection of powerful AI agents for every business need.<br>Instantly compare features, pricing, and use cases to find your perfect fit.</p>
+                </div>
+                <div class="about-step">
+                    <span class="about-icon" aria-label="Configure" role="img">⚙️</span>
+                    <h3>Configure</h3>
+                    <p>Customize your agent's features and integrations with a few clicks.<br>Plug into your favorite tools like Zendesk, Intercom, or Slack—no coding required.</p>
+                </div>
+                <div class="about-step">
+                    <span class="about-icon" aria-label="Deploy" role="img">🚀</span>
+                    <h3>Deploy</h3>
+                    <p>Launch instantly and start seeing results.<br>Track performance and ROI from your dashboard, and scale as your business grows.</p>
+                </div>
+            </div>
+        </section>
+        <section class="testimonials-section fade-in" id="testimonials" aria-labelledby="testimonials-title">
+            <h2 id="testimonials-title">What Our Users Say</h2>
+            <div class="testimonial-carousel">
+                <div class="testimonial card active">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alex Smith headshot" class="testimonial-headshot" width="56" height="56" loading="lazy" />
+                    <p>"MarketplaceOcta 8 made launching my website business effortless. The AI handled everything!"</p>
+                    <span>— Alex Smith, Web Entrepreneur</span>
+                </div>
+                <div class="testimonial card">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Jamie Lee headshot" class="testimonial-headshot" width="56" height="56" loading="lazy" />
+                    <p>"I sold 3 sites in my first week using MarketplaceOcta 8. The automation is next-level."</p>
+                    <span>— Jamie Lee, Digital Marketer</span>
+                </div>
+                <div class="testimonial card">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya Patel headshot" class="testimonial-headshot" width="56" height="56" loading="lazy" />
+                    <p>"The best AI marketplace I've ever used. Fast, modern, and super easy."</p>
+                    <span>— Priya Patel, Startup Founder</span>
+                </div>
+            </div>
+            <div class="featured-in">
+                <span>Featured In:</span>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Forbes_logo.svg/200px-Forbes_logo.svg.png" alt="Forbes logo" class="featured-logo" height="28" loading="lazy" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/TechCrunch_logo.svg/200px-TechCrunch_logo.svg.png" alt="TechCrunch logo" class="featured-logo" height="28" loading="lazy" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Inc._magazine_logo.png/200px-Inc._magazine_logo.png" alt="Inc. logo" class="featured-logo" height="28" loading="lazy" />
+            </div>
+        </section>
+        <section class="contact-section fade-in" id="contact" aria-labelledby="contact-title">
+            <h2 id="contact-title">Get in Touch</h2>
+            <form class="contact-form card" aria-label="Contact form">
+                <label for="contact-name" class="sr-only">Your Name</label>
+                <input type="text" id="contact-name" placeholder="Your Name" required aria-label="Your Name" />
+                <label for="contact-email" class="sr-only">Your Email</label>
+                <input type="email" id="contact-email" placeholder="Your Email" required aria-label="Your Email" />
+                <label for="contact-message" class="sr-only">How can we help?</label>
+                <textarea id="contact-message" placeholder="How can we help?" required aria-label="How can we help?"></textarea>
+                <button type="submit" aria-label="Send Message">Send Message</button>
+            </form>
+            <div class="contact-socials">
+                <a href="#" title="Instagram" aria-label="Instagram">Instagram</a>
+                <a href="#" title="Twitter" aria-label="Twitter">Twitter</a>
+                <a href="#" title="Email" aria-label="Email">Email</a>
+            </div>
+        </section>
     </main>
-    <section class="about-section fade-in" id="about">
-        <h2>How It Works</h2>
-        <div class="about-steps">
-            <div class="about-step">
-                <span class="about-icon">🔍</span>
-                <h3>Explore</h3>
-                <p>Browse a curated selection of powerful AI agents for every business need.</p>
-            </div>
-            <div class="about-step">
-                <span class="about-icon">⚙️</span>
-                <h3>Configure</h3>
-                <p>Customize your agent's features and integrations with a few clicks.</p>
-            </div>
-            <div class="about-step">
-                <span class="about-icon">🚀</span>
-                <h3>Deploy</h3>
-                <p>Launch instantly and start seeing results—no coding required.</p>
-            </div>
-        </div>
-    </section>
-    <section class="testimonials-section fade-in" id="testimonials">
-        <h2>What Our Users Say</h2>
-        <div class="testimonial-carousel">
-            <div class="testimonial card active">
-                <p>"MarketplaceOcta 8 made launching my website business effortless. The AI handled everything!"</p>
-                <span>— Alex Smith, Web Entrepreneur</span>
-            </div>
-            <div class="testimonial card">
-                <p>"I sold 3 sites in my first week using MarketplaceOcta 8. The automation is next-level."</p>
-                <span>— Jamie Lee, Digital Marketer</span>
-            </div>
-            <div class="testimonial card">
-                <p>"The best AI marketplace I've ever used. Fast, modern, and super easy."</p>
-                <span>— Priya Patel, Startup Founder</span>
-            </div>
-        </div>
-    </section>
-    <section class="contact-section fade-in" id="contact">
-        <h2>Get in Touch</h2>
-        <form class="contact-form card">
-            <input type="text" placeholder="Your Name" required />
-            <input type="email" placeholder="Your Email" required />
-            <textarea placeholder="How can we help?" required></textarea>
-            <button type="submit">Send Message</button>
-        </form>
-        <div class="contact-socials">
-            <a href="#" title="Instagram">Instagram</a>
-            <a href="#" title="Twitter">Twitter</a>
-            <a href="#" title="Email">Email</a>
-        </div>
-    </section>
 </body>
 </html> 
