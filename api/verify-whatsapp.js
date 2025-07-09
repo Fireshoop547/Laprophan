@@ -34,6 +34,11 @@ module.exports = async (req, res) => {
       }
     );
 
+    // Check for error in the response data
+    if (data.error) {
+      return res.status(401).json({ valid: false, error: data.error });
+    }
+
     // Success: you get access_token, token_type, expires_in
     return res.status(200).json({ valid: true, data });
   } catch (err) {
