@@ -1,6 +1,6 @@
 import Airtable from 'airtable';
 
-const base = new Airtable({ apiKey: process.env.AIRTABLE_TOKEN }).base(process.env.AIRTABLE_BASE || 'appDa8qQEcSLeoLWm');
+const base = new Airtable({ token: process.env.AIRTABLE_TOKEN }).base(process.env.AIRTABLE_BASE || 'appDa8qQEcSLeoLWm');
 const TABLE_NAME = 'FormSubmissions';
 
 export default async function handler(req, res) {
