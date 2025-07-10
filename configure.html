@@ -154,9 +154,9 @@
             $('#sent-message').hide();
             $('#saved-data-display').hide();
             
-            // Save to Vercel serverless function endpoint
+            // Save to Vercel serverless function endpoint for static JSON
             $.ajax({
-                url: '/api/save-config',
+                url: '/api/save-latest-config',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
