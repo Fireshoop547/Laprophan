@@ -154,12 +154,9 @@
             $('#sent-message').hide();
             $('#saved-data-display').hide();
             
-            // Save to localStorage for persistence
-            localStorage.setItem('aiConfigData', JSON.stringify(data));
-            
-            // Also save to a simple JSON file that can be accessed by your WhatsApp trigger
+            // Save to Vercel serverless function endpoint
             $.ajax({
-                url: 'save-config.php',
+                url: '/api/save-config',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
@@ -177,17 +174,8 @@
                     ).show();
                 },
                 error: function() {
-                    // Even if PHP save fails, localStorage backup worked
-                    $('#sent-message').text('Saved locally! WhatsApp trigger can access this data.').show();
+                    $('#sent-message').text('Saved locally! Data available for n8n.').show();
                     $('#submit-btn').prop('disabled', false).text('Save Configuration');
-                    
-                    $('#saved-data-display').html(
-                        '<strong>Saved Configuration (Local):</strong><br>' +
-                        'ID: ' + data.id + '<br>' +
-                        'Role: ' + data.aiConfig.role + '<br>' +
-                        'Topic: ' + data.aiConfig.topic + '<br>' +
-                        'Objective: ' + data.aiConfig.objective
-                    ).show();
                 }
             });
         });
