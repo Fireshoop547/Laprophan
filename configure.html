@@ -134,47 +134,30 @@
         });
 
         $('#submit-btn').on('click', function() {
-            var data = {
-                whatsapp: {
-                    clientId: $('#wa-client-id').val(),
-                    clientSecret: $('#wa-client-secret').val()
-                },
-                aiConfig: {
+            // Save to Airtable via Vercel serverless function
+            $.ajax({
+                url: '/api/save-config',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
                     role: $('#persona').val(),
                     topic: $('#topic').val(),
                     objective: $('#objective').val(),
                     details: $('#details').val(),
                     tone: $('#tone').val()
-                },
-                timestamp: new Date().toISOString(),
-                id: 'config_' + Date.now()
-            };
-            
-            $('#submit-btn').prop('disabled', true).text('Saving...');
-            $('#sent-message').hide();
-            $('#saved-data-display').hide();
-            
-            // Save to Vercel serverless function endpoint for static JSON
-            $.ajax({
-                url: '/api/save-latest-config',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
+                }),
                 success: function(response) {
                     $('#sent-message').show();
                     $('#submit-btn').prop('disabled', false).text('Save Configuration');
-                    
-                    // Show saved data for reference
                     $('#saved-data-display').html(
                         '<strong>Saved Configuration:</strong><br>' +
-                        'ID: ' + data.id + '<br>' +
-                        'Role: ' + data.aiConfig.role + '<br>' +
-                        'Topic: ' + data.aiConfig.topic + '<br>' +
-                        'Objective: ' + data.aiConfig.objective
+                        'Role: ' + $('#persona').val() + '<br>' +
+                        'Topic: ' + $('#topic').val() + '<br>' +
+                        'Objective: ' + $('#objective').val()
                     ).show();
                 },
-                error: function() {
-                    $('#sent-message').text('Saved locally! Data available for n8n.').show();
+                error: function(xhr) {
+                    $('#sent-message').text('Failed to save!').show();
                     $('#submit-btn').prop('disabled', false).text('Save Configuration');
                 }
             });
