@@ -1,21 +1,11 @@
-const fs = require('fs');
-const path = require('path');
+import { Redis } from '@upstash/redis';
+
+const redis = Redis.fromEnv();
 
 export default async function handler(req, res) {
-  if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(200).end();
-  }
-
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   let data = req.body;
   if (typeof data === 'string') {
@@ -30,15 +20,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'No data provided' });
   }
 
-  // Save to /api/configs directory (for demo/dev only)
-  const configsDir = path.join(process.cwd(), 'api', 'configs');
-  if (!fs.existsSync(configsDir)) {
-    fs.mkdirSync(configsDir, { recursive: true });
+  try {
+    await redis.set('user-config', data);
+    return res.status(200).json({ success: true, message: 'Configuration saved successfully' });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const filename = `config_${timestamp}.json`;
-  const filepath = path.join(configsDir, filename);
-  fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
-
-  return res.status(200).json({ success: true, filename, message: 'Configuration saved successfully' });
 } 

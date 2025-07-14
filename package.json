@@ -9,6 +9,8 @@
     "start": "vercel dev"
   },
   "dependencies": {
+    "@upstash/redis": "^1.35.1",
+    "@vercel/kv": "^3.0.0",
     "axios": "^1.10.0",
     "cors": "^2.8.5",
     "express": "^5.1.0"
