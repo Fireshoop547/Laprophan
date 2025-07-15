@@ -133,34 +133,52 @@
             $('#ai-config-form').show();
         });
 
-        $('#submit-btn').on('click', function() {
-            // Save to Airtable via Vercel serverless function
-            $.ajax({
-                url: '/api/save-config',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    role: $('#persona').val(),
-                    topic: $('#topic').val(),
-                    objective: $('#objective').val(),
-                    details: $('#details').val(),
-                    tone: $('#tone').val()
-                }),
-                success: function(response) {
-                    $('#sent-message').show();
-                    $('#submit-btn').prop('disabled', false).text('Save Configuration');
+        $('#submit-btn').on('click', async function() {
+            const button = $(this);
+            button.prop('disabled', true).text('Submitting...');
+            $('#sent-message').hide();
+            $('#saved-data-display').hide();
+
+            const data = {
+                records: [{
+                    fields: {
+                        'Persona': $('#persona').val(),
+                        'Topic': $('#topic').val(),
+                        'Objective': $('#objective').val(),
+                        'Details': $('#details').val(),
+                        'Tone': $('#tone').val()
+                    }
+                }]
+            };
+
+            try {
+                const response = await fetch('https://api.airtable.com/v0/appDa8qQEcsLeoLWm/FormSubmissions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer patWjJaRjOGqvc5JE',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    $('#sent-message').text('✅ Success! Your prompt has been saved to Airtable.').show();
                     $('#saved-data-display').html(
                         '<strong>Saved Configuration:</strong><br>' +
-                        'Role: ' + $('#persona').val() + '<br>' +
+                        'Persona: ' + $('#persona').val() + '<br>' +
                         'Topic: ' + $('#topic').val() + '<br>' +
                         'Objective: ' + $('#objective').val()
                     ).show();
-                },
-                error: function(xhr) {
-                    $('#sent-message').text('Failed to save!').show();
-                    $('#submit-btn').prop('disabled', false).text('Save Configuration');
+                    $('#ai-config-form')[0].reset();
+                } else {
+                    const error = await response.json();
+                    $('#sent-message').text('❌ Error: ' + (error.error?.message || 'Failed to submit')).show();
                 }
-            });
+            } catch (error) {
+                $('#sent-message').text('❌ Network error. Please try again.').show();
+            }
+
+            button.prop('disabled', false).text('Save Configuration');
         });
     });
     </script>
