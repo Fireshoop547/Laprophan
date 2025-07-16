@@ -4,10 +4,10 @@ export default async function handler(req, res) {
   }
 
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
-  const AIRTABLE_BASE = process.env.AIRTABLE_BASE;
-  const TABLE_NAME = 'FormSubmissions';
+  // const AIRTABLE_BASE = process.env.AIRTABLE_BASE;
+  // const TABLE_NAME = 'FormSubmissions';
 
-  const url = `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(TABLE_NAME)}?sort[0][field]=Created&sort[0][direction]=desc`;
+  const url = 'https://api.airtable.com/v0/appDa8qQEcSLeoLWm/tblfv4HO9C0iChsrG?sort[0][field]=Created&sort[0][direction]=desc';
 
   try {
     const response = await fetch(url, {
